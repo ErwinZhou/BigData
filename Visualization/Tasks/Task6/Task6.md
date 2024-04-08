@@ -131,30 +131,30 @@
    Python代码为：
 
    ```python
-   # Load the provided CSV file
-   file_path_big6 = 'data/Big6.csv'
-   data_big6 = pd.read_csv(file_path_big6)
+   from PIL import Image
    
-   # Dictionary to map the teams to numbers
-   team_to_number = {
-       "Manchester United": 1,
-       "Arsenal": 2,
-       "Liverpool": 3,
-       "Chelsea": 4,
-       "Manchester City": 5,
-       "Tottenham Hotspur": 6
-   }
+   # Load the image
+   img_path = "data/Big6.webp"
+   img = Image.open(img_path)
    
-   # Map the 'Team' column to the corresponding number
-   data_big6['Team'] = data_big6['Team'].map(team_to_number)
+   # Convert the image to RGBA if it's not already in that mode
+   img = img.convert("RGBA")
    
-   # Save the modified data to a new CSV file
-   modified_file_path = '/mnt/data/Big6_Modified.csv'
-   data_big6.to_csv(modified_file_path, index=False)
+   # Retrieve the data of the image
+   datas = img.getdata()
    
-   # Show the first few rows to confirm the changes
-   data_big6.head(), modified_file_path
+   # Create a new data list with modified alpha values
+   new_data = []
+   for item in datas:
+       # Change the alpha value (reduce opacity to 50%)
+       new_data.append(item[:-1] + (int(item[-1] * 0.5),))
    
+   # Update the image data with the new reduced opacity data
+   img.putdata(new_data)
+   
+   # Save the modified image with reduced opacity
+   new_img_path = "data/Big6_reduced_opacity.webp"
+   img.save(new_img_path)
    ```
 
 ![image-20240403235625066](img/image-20240403235625066.png)
